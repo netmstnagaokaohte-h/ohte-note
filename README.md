@@ -1,6 +1,6 @@
 # ohte-note — note記事自動取得システム
 
-新潟県立長岡大手高等学校 公式サイト「学校の様子」セクションに、note公式アカウント（[nagaokaohte-hs.note.jp](https://nagaokaohte-hs.note.jp/)）の最新記事を自動表示するための仕組みです。
+新潟県立長岡大手高等学校 公式サイトに、note公式アカウント（[nagaokaohte-hs.note.jp](https://nagaokaohte-hs.note.jp/)）の最新記事を自動表示するための仕組みです。
 
 ---
 
@@ -122,12 +122,6 @@ https://sciencation.github.io/ohte-note/data/news.json?d=YYYY-MM-DD
 - `scripts/fetch-rss.js` の改修時は、ローカルで `node scripts/fetch-rss.js` を実行して動作確認してから push
 - noteのRSS仕様が変わった場合（要素名や階層）、`fetch-rss.js` の正規表現の見直しが必要です
 
-## 9. 将来の移行について
-
-現在は個人アカウント `sciencation` で運用していますが、運用が安定したら学校または教育委員会のOrganizationアカウントへ移管することを推奨します。
-
-移管手順は GitHub の **Settings → Transfer ownership** から実施できますが、リポジトリURLが変わるため、`events.html` / `index.html` 内の `dataUrl` を新URLに書き換える必要があります（grep対象は2ファイルのみ）。
-
 ---
 
 # 第2部：管理職向け（運用と費用の概要）
@@ -163,11 +157,6 @@ https://sciencation.github.io/ohte-note/data/news.json?d=YYYY-MM-DD
 - GitHubが障害で止まっても、学校サイト本体は通常通り表示されます
 - 記事カード部分のみ「記事を取得できませんでした noteで直接ご覧ください」という案内に切り替わります
 - 障害復旧後は自動で元に戻ります（管理者による作業不要）
-
-## 担当者交代時
-
-- このシステムは個人アカウント `sciencation` で動いています
-- 担当者交代の際は、本READMEの **第1部・9章** の手順で、学校または教育委員会のGitHub Organizationへ移管することを推奨します
 
 ---
 
