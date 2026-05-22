@@ -1,1 +1,54 @@
-1
+name: note RSS を取得して JSON を更新
+
+# =========================================================================
+# 実行タイミング:
+#   - 月-金 の JST 13:00 と 19:00(平日のみ自動実行)
+#   - リポジトリの Actions タブから手動実行も可能(workflow_dispatch)
+#
+# JST と UTC の対応:
+#   JST 13:00 = UTC 04:00
+#   JST 19:00 = UTC 10:00
+#   (日本は UTC+9 のため、UTC = JST - 9時間)
+#
+# 注意:
+#   GitHub Actions の cron は混雑時に 5〜15分の遅延が起きることがあります。
+#   学校サイトの用途では問題のない誤差です。
+# =========================================================================
+
+on:
+  schedule:
+    - cron: '0 4 * * 1-5'   # JST 13:00 月-金
+    - cron: '0 10 * * 1-5'  # JST 19:00 月-金
+  workflow_dispatch:        # 手動実行を許可
+
+# このワークフローはリポジトリへの書き込みが必要
+permissions:
+  contents: write
+
+jobs:
+  update-news-json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Node.js をセットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: note RSS を取得して JSON を生成
+        run: node scripts/fetch-rss.js
+
+      - name: 変更があればコミット・プッシュ
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain data/news.json)" ]; then
+            git add data/news.json
+            git commit -m "chore: note RSS を自動更新 ($(date -u +'%Y-%m-%d %H:%M UTC'))"
+            git push
+            echo "✅ JSONを更新しました"
+          else
+            echo "ℹ️ 前回から変更なし(コミットスキップ)"
+          fi
